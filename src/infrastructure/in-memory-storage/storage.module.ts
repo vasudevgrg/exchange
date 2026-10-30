@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { StorageHandler } from "./storage.handler";
 
 @Module({
-  imports: [],
+  exports: [StorageHandler],
   controllers: [],
   providers: [StorageHandler],
 })

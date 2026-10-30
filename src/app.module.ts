@@ -4,6 +4,13 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './infrastructure/database/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Market } from './domain/market.entity';
+import { Order } from './domain/order.entity';
+import { Trade } from './domain/trade.entity';
+import { User } from './domain/user.entity';
+import { BuyOrderModule } from './features/buy-order/buy-order.module';
+import { CreateOrderModule } from './features/create-order/create-order.module';
+import { FillOrdersModule } from './features/fill-orders/fill-orders.module';
 
 @Module({
     imports: [
@@ -22,10 +29,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: config.getOrThrow<string>('database.user'),
         password: config.getOrThrow<string>('database.password'),
         database: config.getOrThrow<string>('database.name'),
-        autoLoadEntities: true,
+        entities: [User, Market, Order, Trade],
         synchronize: false,
       }),
     }),
+    BuyOrderModule,
+    CreateOrderModule,
+    FillOrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

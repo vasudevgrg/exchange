@@ -1,4 +1,4 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { createClient } from 'redis';
 
 type NotificationMessage = {
@@ -15,6 +15,7 @@ type NotificationHandler = (
 
 @Injectable()
 export class RedisManager implements OnModuleDestroy {
+  private readonly logger = new Logger(RedisManager.name);
   private readonly client: ReturnType<typeof createClient>;
   private readonly subscriber: ReturnType<typeof createClient>;
   private connection: Promise<void> | undefined;
@@ -32,10 +33,10 @@ export class RedisManager implements OnModuleDestroy {
     this.subscriber = createClient(clientConfig);
 
     this.client.on('error', (error) => {
-      console.error('Redis client error:', error);
+      this.logger.error('Redis client error', error);
     });
     this.subscriber.on('error', (error) => {
-      console.error('Redis subscriber error:', error);
+      this.logger.error('Redis subscriber error', error);
     });
   }
 
@@ -70,7 +71,10 @@ export class RedisManager implements OnModuleDestroy {
           notification.user_uuid,
         );
       } catch (error) {
-        console.error('Failed to process Redis notification:', error);
+        this.logger.error(
+          'Failed to process Redis notification',
+          error instanceof Error ? error.stack : String(error),
+        );
       }
     });
   }

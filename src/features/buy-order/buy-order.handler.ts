@@ -1,12 +1,9 @@
-import { Controller } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from "@nestjs/common";
 import { randomUUID } from "node:crypto";
-import { Order } from "src/domain/order.entity";
 import { StorageHandler } from "src/infrastructure/in-memory-storage/storage.handler";
 import { RedisManager } from "src/infrastructure/redis/redis-manager";
-import { Repository } from "typeorm";
 
-@Controller('/buy-order')
+@Injectable()
 export class BuyOrderHandler {
     constructor(
 
@@ -17,37 +14,43 @@ export class BuyOrderHandler {
     }
 
     async handle(payload: any) {
-        const { quantity, price, market } = payload;
+        const { quantity, price, market, user_id } = payload;
         const fills = this.storageHandler.getSellOrders(payload.market, payload.quantity, payload.price);
         let totalCOnsumed = 0;
 
-        const updatedPayload = fills.map(fills => {
-            totalCOnsumed += fills.quantity;
-            if (fills.order.quantity == fills.quantity) {
-                return { status: 'fulfilled', ...fills.order }
-            } else {
-                return fills.order;
-            }
-
+        const fillEvents = fills.map((fill) => {
+            totalCOnsumed += fill.quantity;
+            return { order_uuid: fill.order.id, quantity: fill.quantity };
         });
 
-        const new_order = {
+        const newOrder = {
             id: randomUUID(),
             price,
             quantity: quantity - totalCOnsumed,
+            user_id,
             timestamp: Date.now()
         }
 
-        if (totalCOnsumed < quantity) {
-            this.storageHandler.set(new_order,
+        if (newOrder.quantity > 0) {
+            this.storageHandler.set(newOrder,
                 'buy',
                 market
             )
-            await this.redisHandler.publishMessage('order_create', updatedPayload);
         };
 
-        await this.redisHandler.publishMessage('order_fill', updatedPayload);
-
+        await this.redisHandler.publishMessage("create_order", {
+            uuid: newOrder.id,
+            user_id,
+            market,
+            quantity,
+            fulfilled_quantity: totalCOnsumed,
+        });
+        if (fillEvents.length > 0) {
+            await this.redisHandler.publishMessage(
+                "fill_order",
+                fillEvents,
+            );
+        }
 
 
 

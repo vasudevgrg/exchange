@@ -22,6 +22,13 @@ interface Fill {
 @Injectable()
 export class StorageHandler {
   private readonly storage: Record<string, MarketOrders> = {};
+  private readonly users: Record<string, {
+    stocks: any[],
+    balance: {
+      available: number,
+      locaked: number
+    }
+  }>
 
   private compare(side: Side, a: Order, b: Order): number {
     const byPrice = side === 'buy' ? b.price - a.price : a.price - b.price;
@@ -110,5 +117,15 @@ export class StorageHandler {
     if (index === -1) return null;
 
     return orders.splice(index, 1)[0];
+  }
+
+  addUser (data) {
+    this.users[data.uuid] = {
+      stocks :[],
+      balance:{
+        available:data.available,
+        locaked: 0
+      }
+    }
   }
 }
