@@ -9,8 +9,8 @@ export class SignatureTypes {
         private readonly fillOrderProcessor: FillOrderProcessor
     ) {}
 
-    public signatureTypes = {
-        'create_order':  this.createOrderProcessor,
-        "fill_order": this.fillOrderProcessor
-    }
+    public readonly signatureTypes = {
+        create_order: this.createOrderProcessor,
+        fill_order: this.fillOrderProcessor,
+    };
 }

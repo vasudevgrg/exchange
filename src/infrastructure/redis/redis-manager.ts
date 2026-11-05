@@ -1,18 +1,6 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { createClient } from 'redis';
 
-type NotificationMessage = {
-  organization_uuid: string;
-  notification_uuid: string;
-  user_uuid: string;
-};
-
-type NotificationHandler = (
-  organizationUuid: string,
-  notificationUuid: string,
-  userUuid: string,
-) => void | Promise<void>;
-
 @Injectable()
 export class RedisManager implements OnModuleDestroy {
   private readonly logger = new Logger(RedisManager.name);
@@ -46,36 +34,14 @@ export class RedisManager implements OnModuleDestroy {
   }
 
   async consumeMessages(
-    pattern: string = '*',
-    handler: NotificationHandler,
-  ): Promise<void> {
+    pattern: string = '*'
+  ): Promise<{ message: any; channel: string }> {
     await this.connect();
-    await this.subscriber.pSubscribe(pattern, async (message, channel) => {
-      if (channel !== 'notification_events') {
-        return;
-      }
 
-      try {
-        const notification = JSON.parse(message) as Partial<NotificationMessage>;
-        if (
-          typeof notification.organization_uuid !== 'string' ||
-          typeof notification.notification_uuid !== 'string' ||
-          typeof notification.user_uuid !== 'string'
-        ) {
-          throw new Error('Invalid notification message');
-        }
-
-        await handler(
-          notification.organization_uuid,
-          notification.notification_uuid,
-          notification.user_uuid,
-        );
-      } catch (error) {
-        this.logger.error(
-          'Failed to process Redis notification',
-          error instanceof Error ? error.stack : String(error),
-        );
-      }
+    return new Promise((resolve, reject) => {
+      this.subscriber.pSubscribe(pattern, (message, channel) => {
+        resolve({ message, channel });
+      }).catch(reject);
     });
   }
 

@@ -9,5 +9,6 @@ import { FillOrderHandler } from './fill-order.handler';
   imports: [TypeOrmModule.forFeature([Order]), RedisModule],
   controllers: [FillOrderController],
   providers: [FillOrderHandler],
+  exports: [FillOrderHandler],
 })
 export class FillOrdersModule {}

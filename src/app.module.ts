@@ -8,9 +8,11 @@ import { Market } from './domain/market.entity';
 import { Order } from './domain/order.entity';
 import { Trade } from './domain/trade.entity';
 import { User } from './domain/user.entity';
+import { OutboxMessage } from './domain/outbox-message.entity';
 import { BuyOrderModule } from './features/buy-order/buy-order.module';
 import { CreateOrderModule } from './features/create-order/create-order.module';
 import { FillOrdersModule } from './features/fill-orders/fill-orders.module';
+import { ConsumeMessagesModule } from './features/consume-messages/consume-messages.module';
 
 @Module({
     imports: [
@@ -29,13 +31,14 @@ import { FillOrdersModule } from './features/fill-orders/fill-orders.module';
         username: config.getOrThrow<string>('database.user'),
         password: config.getOrThrow<string>('database.password'),
         database: config.getOrThrow<string>('database.name'),
-        entities: [User, Market, Order, Trade],
+        entities: [User, Market, Order, Trade, OutboxMessage],
         synchronize: false,
       }),
     }),
     BuyOrderModule,
     CreateOrderModule,
     FillOrdersModule,
+    ConsumeMessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

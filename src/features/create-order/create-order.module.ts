@@ -10,5 +10,6 @@ import { CreateOrderHandler } from './create-order.handler';
   imports: [TypeOrmModule.forFeature([Order, Market]), RedisModule],
   controllers: [CreateOrderController],
   providers: [CreateOrderHandler],
+  exports: [CreateOrderHandler],
 })
 export class CreateOrderModule {}
