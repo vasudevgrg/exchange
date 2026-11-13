@@ -28,7 +28,7 @@ export class StorageHandler {
       available: number,
       locaked: number
     }
-  }>
+  }> = {}
 
   private compare(side: Side, a: Order, b: Order): number {
     const byPrice = side === 'buy' ? b.price - a.price : a.price - b.price;
@@ -37,6 +37,13 @@ export class StorageHandler {
 
   private getBook(market: string): MarketOrders {
     return (this.storage[market] ??= { buy: [], sell: [] });
+  }
+
+  getScreenshot() {
+    return {
+      storage: this.storage,
+      users: this.users
+    }
   }
 
   set(value: Order, side: Side, market: string): void {

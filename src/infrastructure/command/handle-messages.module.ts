@@ -8,6 +8,8 @@ import { FillOrderProcessor } from '../processor/fill-order/fill-order.processor
 import { SignatureTypes } from '../processor/signatures-types.handler';
 import { RedisModule } from '../redis/redis.module';
 import { HandleMessagesCommand } from './handle-messages';
+import { StorageModule } from '../in-memory-storage/storage.module';
+import { TaskScreenshotHandler } from './screenshot-handler';
 
 @Module({
   imports: [
@@ -15,9 +17,11 @@ import { HandleMessagesCommand } from './handle-messages';
     CreateOrderModule,
     FillOrdersModule,
     RedisModule,
+    StorageModule,
   ],
   providers: [
     HandleMessagesCommand,
+    TaskScreenshotHandler,
     CreateOrderProcessor,
     FillOrderProcessor,
     SignatureTypes,

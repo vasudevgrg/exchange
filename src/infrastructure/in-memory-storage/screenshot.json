@@ -1,0 +1,82 @@
+{
+  "storage": {
+    "BTC-USD": {
+      "buy": [
+        {
+          "id": "order-btc-buy-001",
+          "price": 67250,
+          "quantity": 0.4,
+          "timestamp": 1794502200000
+        },
+        {
+          "id": "order-btc-buy-002",
+          "price": 67000,
+          "quantity": 1.25,
+          "timestamp": 1794502260000
+        }
+      ],
+      "sell": [
+        {
+          "id": "order-btc-sell-001",
+          "price": 67400,
+          "quantity": 0.3,
+          "timestamp": 1794502140000
+        },
+        {
+          "id": "order-btc-sell-002",
+          "price": 67600,
+          "quantity": 0.8,
+          "timestamp": 1794502320000
+        }
+      ]
+    },
+    "ETH-USD": {
+      "buy": [
+        {
+          "id": "order-eth-buy-001",
+          "price": 3520,
+          "quantity": 2,
+          "timestamp": 1794502080000
+        }
+      ],
+      "sell": [
+        {
+          "id": "order-eth-sell-001",
+          "price": 3550,
+          "quantity": 1.5,
+          "timestamp": 1794502020000
+        }
+      ]
+    }
+  },
+  "users": {
+    "user-550e8400-e29b-41d4-a716-446655440001": {
+      "stocks": [
+        {
+          "market": "BTC-USD",
+          "quantity": 0.75
+        },
+        {
+          "market": "ETH-USD",
+          "quantity": 4
+        }
+      ],
+      "balance": {
+        "available": 12500,
+        "locaked": 27000
+      }
+    },
+    "user-550e8400-e29b-41d4-a716-446655440002": {
+      "stocks": [
+        {
+          "market": "BTC-USD",
+          "quantity": 0.2
+        }
+      ],
+      "balance": {
+        "available": 8400,
+        "locaked": 13400
+      }
+    }
+  }
+}
