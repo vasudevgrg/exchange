@@ -9,7 +9,6 @@ import { SignatureTypes } from '../processor/signatures-types.handler';
 import { RedisModule } from '../redis/redis.module';
 import { HandleMessagesCommand } from './handle-messages';
 import { StorageModule } from '../in-memory-storage/storage.module';
-import { TaskScreenshotHandler } from './screenshot-handler';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { TaskScreenshotHandler } from './screenshot-handler';
   ],
   providers: [
     HandleMessagesCommand,
-    TaskScreenshotHandler,
     CreateOrderProcessor,
     FillOrderProcessor,
     SignatureTypes,

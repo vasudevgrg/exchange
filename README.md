@@ -45,6 +45,9 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+The in-memory storage is initialized from `src/infrastructure/in-memory-storage/screenshot.json`
+whenever the application starts. Keep this file valid JSON; it is copied into production builds.
+
 ## Run tests
 
 ```bash

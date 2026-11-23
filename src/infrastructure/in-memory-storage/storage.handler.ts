@@ -1,4 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { promises as fs } from "fs";
+import * as path from "path";
 
 type Side = 'buy' | 'sell';
 
@@ -15,20 +17,32 @@ interface MarketOrders {
 }
 
 interface Fill {
-  order: Order; 
+  order: Order;
   quantity: number;
 }
 
 @Injectable()
-export class StorageHandler {
-  private readonly storage: Record<string, MarketOrders> = {};
-  private readonly users: Record<string, {
-    stocks: any[],
-    balance: {
-      available: number,
-      locaked: number
+export class StorageHandler implements OnModuleInit {
+  private readonly logger = new Logger(StorageHandler.name);
+  private storage: Record<string, MarketOrders> = {};
+  private users: Record<string, {
+    stocks: any[];
+    balance: { available: number; locked: number };
+  }> = {};
+
+  async onModuleInit(): Promise<void> {
+    const filePath = path.resolve(__dirname, "../in-memory-storage/screenshot.json");
+
+    try {
+      const fileContent = await fs.readFile(filePath, 'utf8');
+      const parsed = JSON.parse(fileContent);
+      this.storage = parsed.storage ?? {};
+      this.users = parsed.users ?? {};
+      this.logger.log(`Hydrated in-memory book from ${filePath}`);
+    } catch (error) {
+      this.logger.warn(`No screenshot loaded (${error.message}); starting with empty book`);
     }
-  }> = {}
+  }
 
   private compare(side: Side, a: Order, b: Order): number {
     const byPrice = side === 'buy' ? b.price - a.price : a.price - b.price;
@@ -44,6 +58,11 @@ export class StorageHandler {
       storage: this.storage,
       users: this.users
     }
+  }
+
+  uploadScreeenshot(storage, users) {
+    this.storage = storage;
+    this.users = users;
   }
 
   set(value: Order, side: Side, market: string): void {
@@ -126,12 +145,12 @@ export class StorageHandler {
     return orders.splice(index, 1)[0];
   }
 
-  addUser (data) {
+  addUser(data) {
     this.users[data.uuid] = {
-      stocks :[],
-      balance:{
-        available:data.available,
-        locaked: 0
+      stocks: [],
+      balance: {
+        available: data.available,
+        locked: 0
       }
     }
   }

@@ -2,11 +2,11 @@ import { Command, CommandRunner } from "nest-commander";
 import { StorageHandler } from "../in-memory-storage/storage.handler";
 import { Logger } from "@nestjs/common";
 import { promises as fs } from "fs";
-import path from "path";
+import * as path from "path";
 
 @Command({ name: "take-screenshot" })
-export class TaskScreenshotHandler extends CommandRunner {
-  private readonly logger = new Logger(TaskScreenshotHandler.name);
+export class TakeScreenshotHandler extends CommandRunner {
+  private readonly logger = new Logger(TakeScreenshotHandler.name);
 
   constructor(private readonly storageManager: StorageHandler) {
     super();

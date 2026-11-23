@@ -63,7 +63,7 @@
       ],
       "balance": {
         "available": 12500,
-        "locaked": 27000
+        "locked": 27000
       }
     },
     "user-550e8400-e29b-41d4-a716-446655440002": {
@@ -75,7 +75,7 @@
       ],
       "balance": {
         "available": 8400,
-        "locaked": 13400
+        "locked": 13400
       }
     }
   }

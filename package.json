@@ -29,7 +29,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "dispatch-messages": "npm run build && node dist/infrastructure/command/command-handler dispatch-messages",
     "handle-messages": "npm run build && node dist/infrastructure/command/command-handler handle-messages",
-    "take-screenshot": "npm run build && node dist/infrastructure/command/command-handler take-screenshot"
+    "take-screenshot": "npm run build && node dist/infrastructure/command/command-handler take-screenshot",
+    "upload-screenshot": "npm run build && node dist/infrastructure/command/command-handler upload-screenshot"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
